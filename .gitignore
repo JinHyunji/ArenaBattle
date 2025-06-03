@@ -13,7 +13,7 @@
 !/Source/**
 
 # 선택적으로 .uproject 파일 포함 (협업 시 필요)
-!*.uproject
+# !*.uproject
 
 # 선택적으로 Plugins 폴더 내 특정 플러그인만 포함하고 싶을 경우:
 # !/Plugins/MyPlugin/
