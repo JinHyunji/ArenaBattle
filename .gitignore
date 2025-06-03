@@ -1,14 +1,20 @@
-Binaries
-DerivedDataCache
-Intermediate
-Saved
-.vscode
-.vs
-*.VC.db
-*.opensdf
-*.opendb
-*.sdf
-*.sln
-*.suo
-*.xcodeproj
-*.xcworkspace
+# 모든 파일 무시
+/*
+
+# 예외 설정: 폴더 구조 보존
+!/.gitignore
+
+# Config 폴더 포함
+!/Config/
+!/Config/**
+
+# Source 폴더 포함
+!/Source/
+!/Source/**
+
+# 선택적으로 .uproject 파일 포함 (협업 시 필요)
+!*.uproject
+
+# 선택적으로 Plugins 폴더 내 특정 플러그인만 포함하고 싶을 경우:
+# !/Plugins/MyPlugin/
+# !/Plugins/MyPlugin/**
