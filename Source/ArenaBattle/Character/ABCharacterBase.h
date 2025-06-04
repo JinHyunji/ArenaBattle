@@ -6,7 +6,12 @@
 #include "GameFramework/Character.h"
 #include "Interface/ABAnimationAttackInterface.h"
 #include "Interface/ABCharacterWidgetInterface.h"
+#include "Interface/ABCharacterItemInterface.h"
+
 #include "ABCharacterBase.generated.h"
+
+
+DECLARE_LOG_CATEGORY_EXTERN(LogABCharacter, Log, All);
 
 UENUM()
 enum class ECharacterControlType : uint8
@@ -15,8 +20,19 @@ enum class ECharacterControlType : uint8
 	Quater
 };
 
+DECLARE_DELEGATE_OneParam(FOnTakeItemDelegate, class UABItemData* /* InItemData */);
+
+USTRUCT(BlueprintType)
+struct FTakeItemDelegateWrapper
+{
+	GENERATED_BODY()
+	FTakeItemDelegateWrapper() {}
+	FTakeItemDelegateWrapper(const FOnTakeItemDelegate& InItemDelegate) : ItemDelegate(InItemDelegate) {}
+	FOnTakeItemDelegate ItemDelegate;
+};
+
 UCLASS()
-class ARENABATTLE_API AABCharacterBase : public ACharacter, public IABAnimationAttackInterface, public IABCharacterWidgetInterface
+class ARENABATTLE_API AABCharacterBase : public ACharacter, public IABAnimationAttackInterface, public IABCharacterWidgetInterface, public IABCharacterItemInterface
 {
 	GENERATED_BODY()
 
@@ -78,4 +94,18 @@ protected:
 
 	virtual void SetupCharacterWidget(class UABUserWidget* InUserWidget);
 
+// Item Section
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Equipment, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class USkeletalMeshComponent> Weapon;
+
+	UPROPERTY()
+	TArray<FTakeItemDelegateWrapper> TakeItemActions;
+
+	virtual void TakeItem(class UABItemData* InItemData) override;
+	virtual void DrinkPotion(class UABItemData* InItemData);
+	virtual void EquipWeapon(class UABItemData* InItemData);
+	virtual void ReadScroll(class UABItemData* InItemData);
+
 };
+
