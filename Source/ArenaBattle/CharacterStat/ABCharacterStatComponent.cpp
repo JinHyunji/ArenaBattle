@@ -6,11 +6,8 @@
 // Sets default values for this component's properties
 UABCharacterStatComponent::UABCharacterStatComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	MaxHp = 200.0;
+	CurrentHp = MaxHp;
 }
 
 
@@ -19,16 +16,26 @@ void UABCharacterStatComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	SetHp(MaxHp);
 }
 
-
-// Called every frame
-void UABCharacterStatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+float UABCharacterStatComponent::ApplyDamage(float InDamage)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	const float PrevHp = CurrentHp;
+	const float ActualDamage = FMath::Clamp<float>(InDamage, 0.0f, InDamage);
 
-	// ...
+	SetHp(PrevHp - ActualDamage);
+	if (CurrentHp <= KINDA_SMALL_NUMBER)
+	{
+		OnHpZero.Broadcast();
+	}
+
+	return ActualDamage;
 }
 
+void UABCharacterStatComponent::SetHp(float NewHp)
+{
+	CurrentHp = FMath::Clamp<float>(NewHp, 0.0f, MaxHp);
+
+	OnHpChanged.Broadcast(CurrentHp);
+}
