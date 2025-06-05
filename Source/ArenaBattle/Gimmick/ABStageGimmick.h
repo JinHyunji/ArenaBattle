@@ -29,10 +29,14 @@ UCLASS()
 class ARENABATTLE_API AABStageGimmick : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AABStageGimmick();
+
+public:
+	FORCEINLINE int32 GetStageNum() const { return CurrentStageNum; }
+	FORCEINLINE void SetStageNum(int32 NewStageNum) { CurrentStageNum = NewStageNum; }
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
@@ -107,4 +111,8 @@ protected:
 
 	void SpawnRewardBoxes(); 
 
+// Stage Stat
+protected:
+	UPROPERTY(VisibleAnywhere, Category = Stat, Meta = (AllowPrivateAccess = "true"))
+	int32 CurrentStageNum;
 };

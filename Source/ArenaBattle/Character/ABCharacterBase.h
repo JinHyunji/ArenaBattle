@@ -107,5 +107,9 @@ protected:
 	virtual void EquipWeapon(class UABItemData* InItemData);
 	virtual void ReadScroll(class UABItemData* InItemData);
 
+// Stat Section
+public:
+	int32 GetLevel();
+	void SetLevel(int32 InNewLevel);
 };
 
