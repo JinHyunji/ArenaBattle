@@ -119,6 +119,7 @@ void AABCharacterBase::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	Stat->OnHpZero.AddUObject(this, &AABCharacterBase::SetDead);
+	Stat->OnStatChanged.AddUObject(this, &AABCharacterBase::ApplyStat);
 }
 
 void AABCharacterBase::SetCharacterControlData(const UABCharacterControlData* CharacterControlData)
@@ -176,6 +177,13 @@ void AABCharacterBase::ComboActionEnd(UAnimMontage* TargetMontage, bool IsProper
 	ensure(CurrentCombo != 0);
 	CurrentCombo = 0;
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+
+	NotifyComboActionEnd();
+}
+
+void AABCharacterBase::NotifyComboActionEnd()
+{
+
 }
 
 void AABCharacterBase::SetComboCheckTimer()
@@ -212,7 +220,7 @@ void AABCharacterBase::AttackHitCheck()
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), false, this);
 
 	const float AttackRange = Stat->GetTotalStat().AttackRange;
-	const float AttackRadius = 50.0f;
+	const float AttackRadius = Stat->GetAttackRadius();
 	const float AttackDamage = Stat->GetTotalStat().Attack;
 	const FVector Start = GetActorLocation() + GetActorForwardVector() * GetCapsuleComponent()->GetScaledCapsuleRadius();
 	const FVector End = Start + GetActorForwardVector() * AttackRange;
@@ -312,4 +320,10 @@ int32 AABCharacterBase::GetLevel()
 void AABCharacterBase::SetLevel(int32 InNewLevel)
 {
 	Stat->SetLevelStat(InNewLevel);
+}
+
+void AABCharacterBase::ApplyStat(const FABCharacterStat& BaseStat, const FABCharacterStat& ModifierStat)
+{
+	float MovementSpeed = (BaseStat + ModifierStat).MovementSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
 }
