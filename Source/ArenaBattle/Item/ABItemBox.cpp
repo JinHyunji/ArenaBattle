@@ -50,6 +50,12 @@ void AABItemBox::PostInitializeComponents()
     Manager.GetPrimaryAssetIdList(TEXT("ABItemData"), Assets);
     ensure(0 < Assets.Num());
 
+    /*if (Assets.Num() == 0)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("No ABItemData assets found."));
+        return;  // 배열이 비어있으면 함수 종료(아이템 설정 못함)
+    }*/
+
     int32 RandomIndex = FMath::RandRange(0, Assets.Num() - 1);
     FSoftObjectPtr AssetPtr(Manager.GetPrimaryAssetPath(Assets[RandomIndex]));
     if (AssetPtr.IsPending())
@@ -58,6 +64,12 @@ void AABItemBox::PostInitializeComponents()
     }
     Item = Cast<UABItemData>(AssetPtr.Get());
     ensure(Item);
+
+    /*if (!Item)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Failed to load ABItemData asset."));
+        return;
+    }*/
 
     Trigger->OnComponentBeginOverlap.AddDynamic(this, &AABItemBox::OnOverlapBegin);
 

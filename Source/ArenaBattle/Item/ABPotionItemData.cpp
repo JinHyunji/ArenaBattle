@@ -3,3 +3,7 @@
 
 #include "Item/ABPotionItemData.h"
 
+UABPotionItemData::UABPotionItemData()
+{
+	Type = EItemType::Potion;
+}

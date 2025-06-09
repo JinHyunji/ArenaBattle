@@ -14,4 +14,15 @@ class ARENABATTLE_API UABPotionItemData : public UABItemData
 {
 	GENERATED_BODY()
 	
+public:
+	UABPotionItemData();
+
+	FPrimaryAssetId GetPrimaryAssetId() const override
+	{
+		return FPrimaryAssetId("ABItemData", GetFName());
+	}
+
+public:
+	UPROPERTY(EditAnywhere, Category = Hp)
+	float HealAmount;
 };

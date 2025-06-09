@@ -3,3 +3,7 @@
 
 #include "Item/ABScrollItemData.h"
 
+UABScrollItemData::UABScrollItemData()
+{
+	Type = EItemType::Scroll;
+}
